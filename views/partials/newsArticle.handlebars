@@ -1,12 +1,18 @@
-<ul>
-
+<div>
     {{#each news}}
-    <li>
-        <img src={{img}} alt=""> <br>
-        <a href={{link}}>{{title}}</a> <br>
-        {{desc}} <br>
-    </li>
+    <div class="ui items">
+        <div class="item">
+            <div class="image">
+                <img src={{img}}>
+            </div>
+            <div class="content">
+                <a class="header" href={{link}} target="_blank">{{title}}</a>
+                <div class="description">
+                    <p>{{desc}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <hr>
     {{/each}}
-
-</ul>
+</div>
