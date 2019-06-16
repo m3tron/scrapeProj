@@ -12,6 +12,7 @@ app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
 
 app.use("/", require("./routes/controller"));
+app.get("/scrape");
 
 app.listen(PORT, () => {
   console.log(`Connected go to: http://localhost:${PORT}`);

@@ -9,10 +9,6 @@ const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scrapeDb";
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 router.get("/", (req, res) => {
-  res.render("index");
-});
-
-router.get("/scrape", (req, res) => {
   axios
     .get("https://www.technewsworld.com/perl/section/developers/")
     .then(response => {
@@ -47,7 +43,8 @@ router.get("/scrape", (req, res) => {
           })
           .catch(err => console.log("News article already in db"));
       });
-      res.render("news");
+      console.log("------DONE------");
+      res.render("index");
     })
     .catch(err => console.log(err));
 });
