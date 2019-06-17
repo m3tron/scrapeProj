@@ -10,14 +10,31 @@
     <script src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-
-    <script src="/assets/js/app.js"></script>
+    <script src="assets/js/app.js"></script>
 </head>
 
 <body>
     <div class="ui container">
         <h1>Welcome to Scrape Master</h1>
         {{{body}}}
+    </div>
+
+    <div class="ui basic modal">
+        <div class="ui icon header">
+            <i class="comments outline icon"></i>
+        </div>
+        <div class="ui inverted form">
+            <p id="currentComment"></p>
+            <div class="field">
+                <label>Name</label>
+                <input id='nameInput' type="text" required>
+            </div>
+            <div class="field">
+                <label>Comment</label>
+                <input id='commentInput' type="text" required>
+            </div>
+            <div class="ui submit button saveComment">Submit</div>
+        </div>
     </div>
 </body>
 

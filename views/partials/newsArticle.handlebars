@@ -1,18 +1,21 @@
-<div>
+<div class="ui cards">
     {{#each news}}
-    <div class="ui items">
-        <div class="item">
-            <div class="image">
-                <img src={{img}}>
-            </div>
-            <div class="content">
-                <a class="header" href={{link}} target="_blank">{{title}}</a>
-                <div class="description">
-                    <p>{{desc}}</p>
-                </div>
+
+    <div class="card">
+        <div class="image">
+            <img src={{img}}>
+        </div>
+        <div class="content">
+            <a class="header" href={{link}} target="_blank">{{title}}</a>
+            <div class="description">
+                <p>{{desc}}</p>
             </div>
         </div>
+        <div id={{_id}} class="ui bottom attached button commentButton">
+            <i class="add icon"></i>
+            Note
+        </div>
     </div>
-    <hr>
+
     {{/each}}
 </div>

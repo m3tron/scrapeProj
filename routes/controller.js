@@ -57,4 +57,25 @@ router.get("/news", (req, res) => {
     .catch(err => console.log(err));
 });
 
+router.post("/comment/:id", (req, res) => {
+  console.log(req.body.name);
+  db.Note.create({ name: req.body.name, comment: req.body.comment })
+    .then(comment => {
+      console.log(comment._id);
+      return db.News.findOneAndUpdate(
+        { _id: req.params.id },
+        { $push: { comment: comment._id } },
+        { new: true }
+      );
+    })
+    .then(articleData => {
+      console.log(articleData);
+      console.log(articleData.comment);
+      res.render("news");
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
 module.exports = router;

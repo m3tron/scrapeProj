@@ -7,9 +7,9 @@ const NewsSchema = new Schema({
   img: { type: String, required: true },
   link: { type: String, required: true },
   desc: { type: String, required: true },
-  note: {
-    type: Schema.Types.ObjectId,
-    ref: "Note"
+  comment: {
+    type: [Schema.Types.ObjectId],
+    ref: "Comment"
   }
 });
 

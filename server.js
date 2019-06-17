@@ -6,13 +6,12 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-//app.use(express.static('public'))
+app.use(express.static("public"));
 
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
 
 app.use("/", require("./routes/controller"));
-app.get("/scrape");
 
 app.listen(PORT, () => {
   console.log(`Connected go to: http://localhost:${PORT}`);
