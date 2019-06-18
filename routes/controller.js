@@ -41,9 +41,8 @@ router.get("/", (req, res) => {
           .then(data => {
             console.log("done");
           })
-          .catch(err => console.log("News article already in db"));
+          .catch(err => console.log(err.code));
       });
-      console.log("------DONE------");
       res.render("index");
     })
     .catch(err => console.log(err));
@@ -58,10 +57,9 @@ router.get("/news", (req, res) => {
 });
 
 router.post("/comment/:id", (req, res) => {
-  console.log(req.body.name);
-  db.Note.create({ name: req.body.name, comment: req.body.comment })
+  console.log(req.body.name, req.body.comment);
+  db.Comment.create({ name: req.body.name, comment: req.body.comment })
     .then(comment => {
-      console.log(comment._id);
       return db.News.findOneAndUpdate(
         { _id: req.params.id },
         { $push: { comment: comment._id } },
@@ -69,13 +67,44 @@ router.post("/comment/:id", (req, res) => {
       );
     })
     .then(articleData => {
-      console.log(articleData);
-      console.log(articleData.comment);
       res.render("news");
     })
     .catch(err => {
-      console.log(err);
+      const error = [];
+      if (err.name === "ValidationError") {
+        error.push("Please fill in all fields");
+        res.render("news", { error });
+      } else console.log(err.name);
     });
+});
+
+router.get("/comment/:id", (req, res) => {
+  db.News.findOne({ _id: req.params.id })
+    .populate("comment.Comment")
+    .then(function(data) {
+      const promises = [];
+      const commentArr = [];
+
+      promises.push(
+        data.comment.forEach(commentId => {
+          promises.push(
+            db.Comment.findById(commentId).then(data => {
+              commentArr.push({
+                id: commentId,
+                name: data.name,
+                comment: data.comment
+              });
+            })
+          );
+        })
+      );
+      Promise.all(promises).then(() => {
+        console.log(commentArr);
+        res.json(commentArr);
+        return commentArr;
+      });
+    })
+    .catch(err => console.log(err));
 });
 
 module.exports = router;

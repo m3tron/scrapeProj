@@ -1,0 +1,12 @@
+<ul>
+    {{#if error}}
+    {{#each error}}
+    <div class="ui red message">
+        <i class="close icon"></i>
+        <div class="header">
+            {{this}}
+        </div>
+    </div>
+    {{/each}}
+    {{/if}}
+</ul>

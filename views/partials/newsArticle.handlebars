@@ -12,9 +12,35 @@
             </div>
         </div>
         <div id={{_id}} class="ui bottom attached button commentButton">
-            <i class="add icon"></i>
-            Note
+            <i class="comments icon"></i>
+            Comments
         </div>
+    </div>
+
+    <div id="modal-{{_id}}" class="ui basic modal">
+        <div class="ui icon header">
+            <i class="comments outline icon"></i>
+        </div>
+
+        <div class="ui inverted form commentForm scrolling content">
+            <div id="currentComment" class="ui inverted comments">
+                <div class="comment">
+                    <div class="content commentContent"></div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Name</label>
+                <input id='nameInput-{{_id}}' type="text" name="name" placeholder="Enter your name" class="required" />
+            </div>
+            <div class="field">
+                <label>Comment</label>
+                <input id='commentInput-{{_id}}' type="text" name="comment" placeholder="Enter your comment"
+                    class="required" />
+            </div>
+            <div class="ui submit button saveComment">Submit</div>
+            <div class="ui error message"></div>
+        </div>
+        {{> errorMessage}}
     </div>
 
     {{/each}}
