@@ -10,6 +10,7 @@ mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true
 });
 
+//scrape on page load
 router.get("/", (req, res) => {
   axios
     .get("https://www.technewsworld.com/perl/section/developers/")
@@ -45,19 +46,23 @@ router.get("/", (req, res) => {
           })
           .catch(err => console.log(err.code));
       });
+      //once scrapping is done then render view
       res.render("index");
     })
     .catch(err => console.log(err));
 });
 
+//retrieve news articles from database
 router.get("/news", (req, res) => {
   db.News.find({})
     .then(news => {
+      //render news view with news object sent to newsArticle partial
       res.render("news", { news });
     })
     .catch(err => console.log(err));
 });
 
+//post new comment
 router.post("/comment/:id", (req, res) => {
   db.Comment.create({ name: req.body.name, comment: req.body.comment })
     .then(comment => {
@@ -71,6 +76,7 @@ router.post("/comment/:id", (req, res) => {
       res.render("news");
     })
     .catch(err => {
+      //doesn't seem to be working(maybe issue with modal)
       const error = [];
       if (err.name === "ValidationError") {
         error.push("Please fill in all fields");
@@ -79,10 +85,12 @@ router.post("/comment/:id", (req, res) => {
     });
 });
 
+//retrive comments for an article
 router.get("/comment/:id", (req, res) => {
   db.News.findOne({ _id: req.params.id })
     .populate("comment.Comment")
     .then(data => {
+      //resend new comments
       populateComment(data, res);
     })
     .catch(err => console.log(err));
@@ -129,6 +137,9 @@ populateComment = (data, res) => {
       );
     })
   );
+  /*push promises into promises array
+  then make Promise to complete promises
+  then send response*/
   Promise.all(promises).then(() => {
     res.json(commentArr);
   });
