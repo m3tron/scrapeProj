@@ -4,6 +4,7 @@ $(document).ready(function() {
     const idd = this.id;
     $(`#modal-${idd}`).modal("show");
     $(".saveComment").attr("id", idd);
+    $(".commentContent").empty();
     getComments(idd);
   });
 
@@ -21,8 +22,16 @@ $(document).ready(function() {
     }).then(function(data) {
       $(`#nameInput-${idd}`).val("");
       $(`#commentInput-${idd}`).val("");
+      $(".commentContent").empty();
       getComments(idd);
     });
+  });
+
+  $(".removeLink").on("click", function(e) {
+    e.preventDefault();
+    const idd = this.id;
+    console.log(idd);
+    console.log("hi");
   });
 
   $(".ui.form").form({
@@ -57,19 +66,21 @@ const checkRequired = () => {
 
 const getComments = id => {
   $.ajax({ method: "GET", url: `comment/${id}` }).then(data => {
-    console.log(data);
+    /*  console.log(data); */
     data.forEach(element => {
-      $(".commentContent")
-        .attr("id", element.id)
-        .append(
-          `<a class="author" style="color:white;">${element.name}</a>
+      $(".commentContent").append(
+        `<a class="author" style="color:white;">${element.name}</a>
       <div class="text" style="color:white;">
         ${element.comment}
       </div>
       <div class="actions">
-        <a class="reply">Reply</a>
+        <a id="${element.id}" href="/delete/${id}/${
+          element.id
+        }" class="remove removeLink" style="color:red;">Delete</a>
       </div>`
-        );
+      );
     });
   });
 };
+
+const newCommentDiv = "";

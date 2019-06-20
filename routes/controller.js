@@ -6,7 +6,9 @@ const router = express.Router();
 const db = require("../models");
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scrapeDb";
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true
+});
 
 router.get("/", (req, res) => {
   axios
@@ -57,7 +59,6 @@ router.get("/news", (req, res) => {
 });
 
 router.post("/comment/:id", (req, res) => {
-  console.log(req.body.name, req.body.comment);
   db.Comment.create({ name: req.body.name, comment: req.body.comment })
     .then(comment => {
       return db.News.findOneAndUpdate(
@@ -81,30 +82,56 @@ router.post("/comment/:id", (req, res) => {
 router.get("/comment/:id", (req, res) => {
   db.News.findOne({ _id: req.params.id })
     .populate("comment.Comment")
-    .then(function(data) {
-      const promises = [];
-      const commentArr = [];
-
-      promises.push(
-        data.comment.forEach(commentId => {
-          promises.push(
-            db.Comment.findById(commentId).then(data => {
-              commentArr.push({
-                id: commentId,
-                name: data.name,
-                comment: data.comment
-              });
-            })
-          );
-        })
-      );
-      Promise.all(promises).then(() => {
-        console.log(commentArr);
-        res.json(commentArr);
-        return commentArr;
-      });
+    .then(data => {
+      populateComment(data, res);
     })
     .catch(err => console.log(err));
 });
+
+/*Need to work on deleting comment
+-removes comment from comment model
+-need to access array inside news.comment*/
+/* router.get("/delete/:artId/:id", (req, res) => {
+  
+  db.Comment.deleteOne({ _id: req.params.id })
+    .then(data => {
+      db.News.findOneAndUpdate(
+        { _id: req.params.artId },
+        { $pull: { comment: req.params.id } },
+        { new: true }
+      );
+    })
+    .then(data => {
+      db.News.findOne({ _id: req.params.artId })
+        .populate("comment.Comment")
+        .then(data => {
+          populateComment(data, res);
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+}); */
+
+populateComment = (data, res) => {
+  const promises = [];
+  const commentArr = [];
+
+  promises.push(
+    data.comment.forEach(commentId => {
+      promises.push(
+        db.Comment.findById(commentId).then(data => {
+          commentArr.push({
+            id: commentId,
+            name: data.name,
+            comment: data.comment
+          });
+        })
+      );
+    })
+  );
+  Promise.all(promises).then(() => {
+    res.json(commentArr);
+  });
+};
 
 module.exports = router;
